@@ -18,6 +18,9 @@
     <ClCompile Include="code\support\render_main.cpp">
       <Filter>code\support</Filter>
     </ClCompile>
+    <ClCompile Include="code\demo.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\support\camera_controller.h">
@@ -31,6 +34,9 @@
     </ClInclude>
     <ClInclude Include="code\support\resolution.h">
       <Filter>code\support</Filter>
+    </ClInclude>
+    <ClInclude Include="code\demo.h">
+      <Filter>code</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -105,6 +105,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>DXGI.lib;D3D11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -124,6 +125,7 @@
       </HeapCommitSize>
       <StackReserveSize>209715200</StackReserveSize>
       <StackCommitSize>104857600</StackCommitSize>
+      <AdditionalDependencies>DXGI.lib;D3D11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -141,6 +143,7 @@
       </HeapReserveSize>
       <HeapCommitSize>
       </HeapCommitSize>
+      <AdditionalDependencies>DXGI.lib;D3D11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -157,14 +160,17 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>DXGI.lib;D3D11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="code\demo.cpp" />
     <ClCompile Include="code\support\camera_controller.cpp" />
     <ClCompile Include="code\support\render_main.cpp" />
     <ClCompile Include="code\support\window_main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code\demo.h" />
     <ClInclude Include="code\support\camera_controller.h" />
     <ClInclude Include="code\support\render_main.h" />
     <ClInclude Include="code\support\resolution.h" />
