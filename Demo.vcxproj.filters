@@ -23,7 +23,7 @@
       <UniqueIdentifier>{5f468963-6637-47bf-8342-c478fc456554}</UniqueIdentifier>
     </Filter>
     <Filter Include="spirv">
-      <UniqueIdentifier>{72a581b1-eb39-4cc4-bc8c-9260d4e4ec97}</UniqueIdentifier>
+      <UniqueIdentifier>{104f02ae-ffd6-402e-9369-4621fd1914d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -36,23 +36,23 @@
     <ClCompile Include="code\support\render_main.cpp">
       <Filter>code\support</Filter>
     </ClCompile>
+    <ClCompile Include="code\demo.cpp">
+      <Filter>code</Filter>
+    </ClCompile>
     <ClCompile Include="code\support\vma.cpp">
       <Filter>code\support</Filter>
     </ClCompile>
     <ClCompile Include="code\support\streaming.cpp">
       <Filter>code\support</Filter>
     </ClCompile>
-    <ClCompile Include="assets\lunarg_ppm.cpp">
+    <ClCompile Include="assets\ltc_lut.cpp">
       <Filter>assets</Filter>
     </ClCompile>
     <ClCompile Include="code\support\utils_align_up.cpp">
       <Filter>code\support</Filter>
     </ClCompile>
-    <ClCompile Include="assets\cube.cpp">
+    <ClCompile Include="assets\plane.cpp">
       <Filter>assets</Filter>
-    </ClCompile>
-    <ClCompile Include="code\demo.cpp">
-      <Filter>code</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -68,26 +68,26 @@
     <ClInclude Include="code\support\resolution.h">
       <Filter>code\support</Filter>
     </ClInclude>
+    <ClInclude Include="code\demo.h">
+      <Filter>code</Filter>
+    </ClInclude>
     <ClInclude Include="code\support\frame_throttling.h">
       <Filter>code\support</Filter>
     </ClInclude>
     <ClInclude Include="code\support\streaming.h">
       <Filter>code\support</Filter>
     </ClInclude>
-    <ClInclude Include="assets\lunarg_ppm.h">
+    <ClInclude Include="assets\ltc_lut.h">
       <Filter>assets</Filter>
     </ClInclude>
     <ClInclude Include="code\support\utils_align_up.h">
       <Filter>code\support</Filter>
     </ClInclude>
-    <ClInclude Include="assets\cube.h">
+    <ClInclude Include="assets\plane.h">
       <Filter>assets</Filter>
     </ClInclude>
-    <ClInclude Include="shaders\forward_shading_pipeline_layout.h">
+    <ClInclude Include="shaders\unified_pipeline_layout.h">
       <Filter>shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="code\demo.h">
-      <Filter>code</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +117,12 @@
     <CustomBuild Include="shaders\forward_shading_vertex.glsl">
       <Filter>shaders</Filter>
     </CustomBuild>
+    <CustomBuild Include="shaders\post_process_fragment.glsl">
+      <Filter>shaders</Filter>
+    </CustomBuild>
+    <CustomBuild Include="shaders\post_process_vertex.glsl">
+      <Filter>shaders</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <None Include="spirv\forward_shading_fragment.inl">
@@ -124,6 +130,24 @@
     </None>
     <None Include="spirv\forward_shading_vertex.inl">
       <Filter>spirv</Filter>
+    </None>
+    <None Include="shaders\math_consts.glsli">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\ltc.glsli">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\brdf.glsli">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="spirv\post_process_fragment.inl">
+      <Filter>spirv</Filter>
+    </None>
+    <None Include="spirv\post_process_vertex.inl">
+      <Filter>spirv</Filter>
+    </None>
+    <None Include="shaders\preintegrated_hdr.glsli">
+      <Filter>shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

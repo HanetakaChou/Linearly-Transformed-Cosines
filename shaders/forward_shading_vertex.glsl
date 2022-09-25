@@ -19,15 +19,26 @@
 
 #extension GL_GOOGLE_include_directive : enable
 
-#include "forward_shading_pipeline_layout.h"
+#include "unified_pipeline_layout.h"
 
 layout(location = 0) in highp vec3 vertex_input_position;
-layout(location = 1) in highp vec2 vertex_input_uv;
+layout(location = 1) in highp vec3 vertex_input_normal;
 
-layout(location = 0) out highp vec2 vertex_output_uv;
+layout(location = 0) out highp vec3 vertex_output_position;
+layout(location = 1) out highp vec3 vertex_output_normal;
 
 void main()
 {
-    gl_Position = P * V * M * vec4(vertex_input_position, 1.0f);
-    vertex_output_uv = vertex_input_uv;
+    highp vec3 model_position = vertex_input_position;
+    highp vec3 world_position = (model_transform * vec4(model_position, 1.0)).xyz;
+    highp vec4 clip_position = projection_transform * view_transform * vec4(world_position, 1.0);
+
+    highp vec3 model_normal = vertex_input_normal;
+    // TODO: normal transform
+    highp mat3x3 tangent_transform = mat3x3(model_transform[0].xyz, model_transform[1].xyz, model_transform[2].xyz);
+    highp vec3 world_normal = normalize(tangent_transform * model_normal);
+
+    vertex_output_position = world_position;
+    vertex_output_normal = world_normal;
+    gl_Position = clip_position;
 }

@@ -39,30 +39,42 @@ class Demo
 	VkImage m_vulkan_depth_image;
 	VkDeviceMemory m_vulkan_depth_device_memory;
 	VkImageView m_vulkan_depth_image_view;
+	VkImage m_vulkan_backup_image;
+	VkDeviceMemory m_vulkan_backup_device_memory;
+	VkImageView m_vulkan_backup_image_view;
 	std::vector<VkFramebuffer> m_vulkan_framebuffers;
+	VkDescriptorSet m_vulkan_framebuffer_set;
 
 	VkSampler m_vulkan_linear_clamp_sampler;
 
 	VkDescriptorSetLayout m_vulkan_global_set_layout;
 	VkDescriptorSetLayout m_vulkan_material_set_layout;
+	VkDescriptorSetLayout m_vulkan_framebuffer_set_layout;
 	VkPipelineLayout m_vulkan_pipeline_layout;
 	VkPipeline m_vulkan_forward_shading_pipeline;
+	VkPipeline m_vulkan_post_process_pipeline;
 
 	VkDescriptorPool m_vulkan_descriptor_pool;
+
+	VmaAllocation m_ltc_matrix_lut_allocation;
+	VkImage m_ltc_matrix_lut;
+	VkImageView m_ltc_matrix_lut_view;
+	VmaAllocation m_ltc_norm_lut_allocation;
+	VkImage m_ltc_norm_lut;
+	VkImageView m_ltc_norm_lut_view;
 	VkDescriptorSet m_vulkan_global_set;
 
-	uint32_t m_cube_vertex_count;
-	VmaAllocation m_cube_vertex_position_allocation;
-	VkBuffer m_cube_vertex_position_buffer;
-	VmaAllocation m_cube_vertex_varying_allocation;
-	VkBuffer m_cube_vertex_varying_buffer;
-	VmaAllocation m_cube_emissive_texture_allocation;
-	VkImage m_cube_emissive_texture;
-	VkImageView m_cube_emissive_texture_view;
-	VkDescriptorSet m_cube_material_set;
-	float m_cube_spin_angle;
+	uint32_t m_plane_vertex_count;
+	VmaAllocation m_plane_vertex_position_allocation;
+	VkBuffer m_plane_vertex_position_buffer;
+	VmaAllocation m_plane_vertex_varying_allocation;
+	VkBuffer m_plane_vertex_varying_buffer;
+	VmaAllocation m_plane_material_buffer_allocation;
+	VkBuffer m_plane_material_buffer;
+	VkDescriptorSet m_plane_material_set;
 
 	PFN_vkCmdBeginRenderPass m_pfn_cmd_begin_render_pass;
+	PFN_vkCmdNextSubpass m_pfn_cmd_next_subpass;
 	PFN_vkCmdEndRenderPass m_pfn_cmd_end_render_pass;
 	PFN_vkCmdBindPipeline m_pfn_cmd_bind_pipeline;
 	PFN_vkCmdSetViewport m_pfn_cmd_set_viewport;
@@ -89,7 +101,7 @@ public:
 
 	void create_frame_buffer(
 		VkInstance vulkan_instance, PFN_vkGetInstanceProcAddr pfn_get_instance_proc_addr, VkPhysicalDevice vulkan_physical_device, VkDevice vulkan_device, PFN_vkGetDeviceProcAddr pfn_get_device_proc_addr, VkAllocationCallbacks *vulkan_allocation_callbacks,
-		VkFormat vulkan_depth_format, uint32_t vulkan_depth_stencil_transient_attachment_memory_index,
+		uint32_t vulkan_color_input_transient_attachment_memory_index, VkFormat vulkan_depth_format, uint32_t vulkan_depth_stencil_transient_attachment_memory_index,
 		uint32_t vulkan_framebuffer_width, uint32_t vulkan_framebuffer_height,
 		VkSwapchainKHR vulkan_swapchain,
 		uint32_t vulkan_swapchain_image_count,

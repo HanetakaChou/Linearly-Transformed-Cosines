@@ -1,0 +1,52 @@
+//
+// Copyright (C) YuqiaoZhang(HanetakaChou)
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+
+#ifndef _PREINTEGRATED_HDR_GLSLI_
+#define _PREINTEGRATED_HDR_GLSLI_ 1
+
+// TODO: term "HDR" is ambiguous
+// HDR (Hemispherical Directional Reflectance)
+// HDR (High Dynamic Range)
+
+#define PreIntegratedHDR_LUT_TR_INDEX 0
+
+highp vec3 preintegrated_hdr_tr(highp vec3 f0, highp float f90, highp float roughness, highp float NdotV)
+{
+    highp ivec2 lut_texture_size = textureSize(preintegrated_hdr_lut, 0);
+    highp vec2 lut_bias = vec2(0.5, 0.5) / vec2(lut_texture_size.x, lut_texture_size.y);
+    highp vec2 lut_scale = vec2(1.0, 1.0) - vec2(1.0, 1.0) / vec2(lut_texture_size.x, lut_texture_size.y);
+    highp vec2 lut_uv = lut_bias + lut_scale * vec2(roughness, sqrt(1.0 - NdotV));
+
+    // highp vec2 n_RG = textureLod(preintegrated_hdr_lut, vec3(lut_uv, PreIntegratedHDR_LUT_TR_INDEX), 0.0).rg;
+    highp vec2 n_RG = textureLod(preintegrated_hdr_lut, lut_uv, 0.0).rg;
+    highp float n_R = n_RG.r;
+    highp float n_G = n_RG.g;
+
+    highp vec3 hdr = f0 * n_R + vec3(f90, f90, f90) * n_G;
+    return hdr;
+}
+
+highp vec3 preintegrated_hdr_tr(highp vec3 f0, highp float roughness, highp float NdotV)
+{
+    // UE: [EnvBRDF](https://github.com/EpicGames/UnrealEngine/blob/4.27/Engine/Shaders/Private/BRDF.ush#L476)
+    // Anything less than 2% is physically impossible and is instead considered to be shadowing
+    highp float f90 = clamp(50.0 * f0.g, 0.0, 1.0);
+
+    return preintegrated_hdr_tr(f0, f90, roughness, NdotV);
+}
+
+#endif

@@ -47,7 +47,6 @@ static inline void vulkan_query_frame_buffer_extent(
 static inline void vulkan_create_swapchain(
 	VkDevice vulkan_device, PFN_vkGetDeviceProcAddr pfn_get_device_proc_addr, VkAllocationCallbacks *vulkan_allocation_callbacks,
 	VkSurfaceKHR vulkan_surface, VkFormat vulkan_swapchain_image_format,
-	VkFormat vulkan_depth_format, uint32_t vulkan_depth_stencil_transient_attachment_memory_index,
 	uint32_t vulkan_framebuffer_width, uint32_t vulkan_framebuffer_height,
 	VkSwapchainKHR &vulkan_swapchain,
 	uint32_t &vulkan_swapchain_image_count,
@@ -566,6 +565,7 @@ unsigned __stdcall render_main(void *pVoid)
 	VkBuffer vulkan_upload_ring_buffer;
 	VkDeviceMemory vulkan_upload_ring_buffer_device_memory;
 	void *vulkan_upload_ring_buffer_device_memory_pointer;
+	uint32_t vulkan_color_input_transient_attachment_memory_index;
 	VkFormat vulkan_depth_format;
 	uint32_t vulkan_depth_stencil_transient_attachment_memory_index;
 	{
@@ -636,6 +636,49 @@ unsigned __stdcall render_main(void *pVoid)
 
 			VkResult res_bind_buffer_memory = pfn_bind_buffer_memory(vulkan_device, vulkan_upload_ring_buffer, vulkan_upload_ring_buffer_device_memory, 0U);
 			assert(VK_SUCCESS == res_bind_buffer_memory);
+		}
+
+		// color attachment
+		vulkan_color_input_transient_attachment_memory_index = VK_MAX_MEMORY_TYPES;
+		{
+			VkDeviceSize memory_requirements_size = VkDeviceSize(-1);
+			uint32_t memory_requirements_memory_type_bits = 0U;
+			{
+				struct VkImageCreateInfo image_create_info_depth_stencil_transient_tiling_optimal;
+				image_create_info_depth_stencil_transient_tiling_optimal.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+				image_create_info_depth_stencil_transient_tiling_optimal.pNext = NULL;
+				image_create_info_depth_stencil_transient_tiling_optimal.flags = 0U;
+				image_create_info_depth_stencil_transient_tiling_optimal.imageType = VK_IMAGE_TYPE_2D;
+				image_create_info_depth_stencil_transient_tiling_optimal.format = VK_FORMAT_R8G8B8A8_UNORM;
+				image_create_info_depth_stencil_transient_tiling_optimal.extent.width = 8U;
+				image_create_info_depth_stencil_transient_tiling_optimal.extent.height = 8U;
+				image_create_info_depth_stencil_transient_tiling_optimal.extent.depth = 1U;
+				image_create_info_depth_stencil_transient_tiling_optimal.mipLevels = 1U;
+				image_create_info_depth_stencil_transient_tiling_optimal.arrayLayers = 1U;
+				image_create_info_depth_stencil_transient_tiling_optimal.samples = VK_SAMPLE_COUNT_1_BIT;
+				image_create_info_depth_stencil_transient_tiling_optimal.tiling = VK_IMAGE_TILING_OPTIMAL;
+				image_create_info_depth_stencil_transient_tiling_optimal.usage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
+				image_create_info_depth_stencil_transient_tiling_optimal.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+				image_create_info_depth_stencil_transient_tiling_optimal.queueFamilyIndexCount = 0U;
+				image_create_info_depth_stencil_transient_tiling_optimal.pQueueFamilyIndices = NULL;
+				image_create_info_depth_stencil_transient_tiling_optimal.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+				VkImage dummy_img;
+				VkResult res_create_image = pfn_create_image(vulkan_device, &image_create_info_depth_stencil_transient_tiling_optimal, vulkan_allocation_callbacks, &dummy_img);
+				assert(VK_SUCCESS == res_create_image);
+
+				struct VkMemoryRequirements memory_requirements;
+				pfn_get_image_memory_requirements(vulkan_device, dummy_img, &memory_requirements);
+				memory_requirements_size = memory_requirements.size;
+				memory_requirements_memory_type_bits = memory_requirements.memoryTypeBits;
+
+				pfn_destroy_image(vulkan_device, dummy_img, vulkan_allocation_callbacks);
+			}
+
+			// The lower index indicates the more performance
+			vulkan_color_input_transient_attachment_memory_index = __internal_find_lowest_memory_type_index(&physical_device_memory_properties, memory_requirements_size, memory_requirements_memory_type_bits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, VK_MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT);
+			assert(VK_MAX_MEMORY_TYPES > vulkan_color_input_transient_attachment_memory_index);
+			assert(physical_device_memory_properties.memoryTypeCount > vulkan_color_input_transient_attachment_memory_index);
 		}
 
 		// depth attachment
@@ -1283,7 +1326,6 @@ unsigned __stdcall render_main(void *pVoid)
 					vulkan_create_swapchain(
 						vulkan_device, pfn_get_device_proc_addr, vulkan_allocation_callbacks,
 						vulkan_surface, vulkan_swapchain_image_format,
-						vulkan_depth_format, vulkan_depth_stencil_transient_attachment_memory_index,
 						vulkan_framebuffer_width, vulkan_framebuffer_height,
 						vulkan_swapchain,
 						vulkan_swapchain_image_count,
@@ -1291,7 +1333,7 @@ unsigned __stdcall render_main(void *pVoid)
 
 					demo.create_frame_buffer(
 						vulkan_instance, pfn_get_instance_proc_addr, vulkan_physical_device, vulkan_device, pfn_get_device_proc_addr, vulkan_allocation_callbacks,
-						vulkan_depth_format, vulkan_depth_stencil_transient_attachment_memory_index,
+						vulkan_color_input_transient_attachment_memory_index, vulkan_depth_format, vulkan_depth_stencil_transient_attachment_memory_index,
 						vulkan_framebuffer_width, vulkan_framebuffer_height,
 						vulkan_swapchain,
 						vulkan_swapchain_image_count,
@@ -1339,7 +1381,6 @@ unsigned __stdcall render_main(void *pVoid)
 					vulkan_create_swapchain(
 						vulkan_device, pfn_get_device_proc_addr, vulkan_allocation_callbacks,
 						vulkan_surface, vulkan_swapchain_image_format,
-						vulkan_depth_format, vulkan_depth_stencil_transient_attachment_memory_index,
 						vulkan_framebuffer_width, vulkan_framebuffer_height,
 						vulkan_swapchain,
 						vulkan_swapchain_image_count,
@@ -1347,7 +1388,7 @@ unsigned __stdcall render_main(void *pVoid)
 
 					demo.create_frame_buffer(
 						vulkan_instance, pfn_get_instance_proc_addr, vulkan_physical_device, vulkan_device, pfn_get_device_proc_addr, vulkan_allocation_callbacks,
-						vulkan_depth_format, vulkan_depth_stencil_transient_attachment_memory_index,
+						vulkan_color_input_transient_attachment_memory_index, vulkan_depth_format, vulkan_depth_stencil_transient_attachment_memory_index,
 						vulkan_framebuffer_width, vulkan_framebuffer_height,
 						vulkan_swapchain,
 						vulkan_swapchain_image_count,
@@ -1444,7 +1485,6 @@ unsigned __stdcall render_main(void *pVoid)
 					vulkan_create_swapchain(
 						vulkan_device, pfn_get_device_proc_addr, vulkan_allocation_callbacks,
 						vulkan_surface, vulkan_swapchain_image_format,
-						vulkan_depth_format, vulkan_depth_stencil_transient_attachment_memory_index,
 						vulkan_framebuffer_width, vulkan_framebuffer_height,
 						vulkan_swapchain,
 						vulkan_swapchain_image_count,
@@ -1452,7 +1492,7 @@ unsigned __stdcall render_main(void *pVoid)
 
 					demo.create_frame_buffer(
 						vulkan_instance, pfn_get_instance_proc_addr, vulkan_physical_device, vulkan_device, pfn_get_device_proc_addr, vulkan_allocation_callbacks,
-						vulkan_depth_format, vulkan_depth_stencil_transient_attachment_memory_index,
+						vulkan_color_input_transient_attachment_memory_index, vulkan_depth_format, vulkan_depth_stencil_transient_attachment_memory_index,
 						vulkan_framebuffer_width, vulkan_framebuffer_height,
 						vulkan_swapchain,
 						vulkan_swapchain_image_count,
@@ -1574,7 +1614,6 @@ static inline void vulkan_query_frame_buffer_extent(
 static inline void vulkan_create_swapchain(
 	VkDevice vulkan_device, PFN_vkGetDeviceProcAddr pfn_get_device_proc_addr, VkAllocationCallbacks *vulkan_allocation_callbacks,
 	VkSurfaceKHR vulkan_surface, VkFormat vulkan_swapchain_image_format,
-	VkFormat vulkan_depth_format, uint32_t vulkan_depth_stencil_transient_attachment_memory_index,
 	uint32_t vulkan_framebuffer_width, uint32_t vulkan_framebuffer_height,
 	VkSwapchainKHR &vulkan_swapchain,
 	uint32_t &vulkan_swapchain_image_count,

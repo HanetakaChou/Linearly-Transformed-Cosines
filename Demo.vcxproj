@@ -168,8 +168,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="assets\cube.cpp" />
-    <ClCompile Include="assets\lunarg_ppm.cpp" />
+    <ClCompile Include="assets\plane.cpp" />
+    <ClCompile Include="assets\ltc_lut.cpp" />
     <ClCompile Include="code\demo.cpp" />
     <ClCompile Include="code\support\camera_controller.cpp" />
     <ClCompile Include="code\support\render_main.cpp" />
@@ -179,8 +179,8 @@
     <ClCompile Include="code\support\window_main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="assets\cube.h" />
-    <ClInclude Include="assets\lunarg_ppm.h" />
+    <ClInclude Include="assets\plane.h" />
+    <ClInclude Include="assets\ltc_lut.h" />
     <ClInclude Include="code\demo.h" />
     <ClInclude Include="code\support\camera_controller.h" />
     <ClInclude Include="code\support\frame_throttling.h" />
@@ -189,7 +189,7 @@
     <ClInclude Include="code\support\streaming.h" />
     <ClInclude Include="code\support\utils_align_up.h" />
     <ClInclude Include="code\support\window_main.h" />
-    <ClInclude Include="shaders\forward_shading_pipeline_layout.h" />
+    <ClInclude Include="shaders\unified_pipeline_layout.h" />
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="vulkansdk\lib\x64\VkLayer_khronos_validation.dll">
@@ -246,10 +246,10 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)shaders\forward_shading_pipeline_layout.h</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)shaders\forward_shading_pipeline_layout.h</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)shaders\forward_shading_pipeline_layout.h</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)shaders\forward_shading_pipeline_layout.h</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)shaders\unified_pipeline_layout.h;$(SolutionDir)shaders\math_consts.glsli;$(SolutionDir)shaders\ltc.glsli;$(SolutionDir)shaders\preintegrated_hdr.glsli</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)shaders\unified_pipeline_layout.h;$(SolutionDir)shaders\math_consts.glsli;$(SolutionDir)shaders\ltc.glsli;$(SolutionDir)shaders\preintegrated_hdr.glsli</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)shaders\unified_pipeline_layout.h;$(SolutionDir)shaders\math_consts.glsli;$(SolutionDir)shaders\ltc.glsli;$(SolutionDir)shaders\preintegrated_hdr.glsli</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)shaders\unified_pipeline_layout.h;$(SolutionDir)shaders\math_consts.glsli;$(SolutionDir)shaders\ltc.glsli;$(SolutionDir)shaders\preintegrated_hdr.glsli</AdditionalInputs>
     </CustomBuild>
     <CustomBuild Include="shaders\forward_shading_vertex.glsl">
       <FileType>Document</FileType>
@@ -261,15 +261,51 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)shaders\forward_shading_pipeline_layout.h</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)shaders\forward_shading_pipeline_layout.h</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)shaders\forward_shading_pipeline_layout.h</AdditionalInputs>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)shaders\forward_shading_pipeline_layout.h</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)shaders\unified_pipeline_layout.h;$(SolutionDir)shaders\math_consts.glsli;$(SolutionDir)shaders\ltc.glsli;$(SolutionDir)shaders\preintegrated_hdr.glsli</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)shaders\unified_pipeline_layout.h;$(SolutionDir)shaders\math_consts.glsli;$(SolutionDir)shaders\ltc.glsli;$(SolutionDir)shaders\preintegrated_hdr.glsli</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)shaders\unified_pipeline_layout.h;$(SolutionDir)shaders\math_consts.glsli;$(SolutionDir)shaders\ltc.glsli;$(SolutionDir)shaders\preintegrated_hdr.glsli</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)shaders\unified_pipeline_layout.h;$(SolutionDir)shaders\math_consts.glsli;$(SolutionDir)shaders\ltc.glsli;$(SolutionDir)shaders\preintegrated_hdr.glsli</AdditionalInputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\brdf.glsli" />
+    <None Include="shaders\ltc.glsli" />
+    <None Include="shaders\math_consts.glsli" />
+    <CustomBuild Include="shaders\post_process_fragment.glsl">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(SolutionDir)vulkansdk\bin\glslangValidator.exe" -g -Od -S frag -V100 -o "$(SolutionDir)\spirv\%(Filename).inl" -x "%(FullPath)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(SolutionDir)vulkansdk\bin\glslangValidator.exe" -g -Od -S frag -V100 -o "$(SolutionDir)\spirv\%(Filename).inl" -x "%(FullPath)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(SolutionDir)vulkansdk\bin\glslangValidator.exe" -S frag -V100 -o "$(SolutionDir)\spirv\%(Filename).inl" -x "%(FullPath)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(SolutionDir)vulkansdk\bin\glslangValidator.exe" -S frag -V100 -o "$(SolutionDir)\spirv\%(Filename).inl" -x "%(FullPath)"</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)shaders\unified_pipeline_layout.h</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)shaders\unified_pipeline_layout.h</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)shaders\unified_pipeline_layout.h</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)shaders\unified_pipeline_layout.h</AdditionalInputs>
+    </CustomBuild>
+    <CustomBuild Include="shaders\post_process_vertex.glsl">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(SolutionDir)vulkansdk\bin\glslangValidator.exe" -g -Od -S vert -V100 -o "$(SolutionDir)\spirv\%(Filename).inl" -x "%(FullPath)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">"$(SolutionDir)vulkansdk\bin\glslangValidator.exe" -g -Od -S vert -V100 -o "$(SolutionDir)\spirv\%(Filename).inl" -x "%(FullPath)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(SolutionDir)vulkansdk\bin\glslangValidator.exe" -S vert -V100 -o "$(SolutionDir)\spirv\%(Filename).inl" -x "%(FullPath)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">"$(SolutionDir)vulkansdk\bin\glslangValidator.exe" -S vert -V100 -o "$(SolutionDir)\spirv\%(Filename).inl" -x "%(FullPath)"</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)\spirv\%(Filename).inl</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)shaders\unified_pipeline_layout.h</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)shaders\unified_pipeline_layout.h</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)shaders\unified_pipeline_layout.h</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)shaders\unified_pipeline_layout.h</AdditionalInputs>
+    </CustomBuild>
+    <None Include="shaders\preintegrated_hdr.glsli" />
     <None Include="spirv\forward_shading_fragment.inl" />
     <None Include="spirv\forward_shading_vertex.inl" />
+    <None Include="spirv\post_process_fragment.inl" />
+    <None Include="spirv\post_process_vertex.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

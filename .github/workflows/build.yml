@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [Cube-VK]
+    branches: [LTC-VK]
   pull_request:
-    branches: [Cube-VK]
+    branches: [LTC-VK]
 
 jobs:
   build_win32_desktop:
