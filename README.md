@@ -1,0 +1,1 @@
+- ltc.glsli: compute area lighting on-the-fly  

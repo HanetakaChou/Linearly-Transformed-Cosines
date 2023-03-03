@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{a7c933e8-f964-4aa3-b8f8-94cb8dde6d47}</UniqueIdentifier>
+    </Filter>
     <Filter Include="code">
       <UniqueIdentifier>{d21fdc33-9e41-4f7b-b35d-cf626d1bd93e}</UniqueIdentifier>
     </Filter>
@@ -23,6 +26,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code\ltc_lut_data.h">
+      <Filter>code</Filter>
+    </ClInclude>
     <ClInclude Include="code\support\camera_controller.h">
       <Filter>code\support</Filter>
     </ClInclude>
@@ -38,5 +44,33 @@
     <ClInclude Include="code\demo.h">
       <Filter>code</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="shaders\post_process_fs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\post_process_vs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\rect_light_fs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\rect_light_vs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\plane_vs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="shaders\plane_fs.hlsl">
+      <Filter>shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\LTC.hlsli">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\BRDF.hlsli">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
